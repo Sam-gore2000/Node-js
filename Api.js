@@ -1,5 +1,6 @@
 const http=require('http');
-const {add,mult}=require('./color')
+const {add,mult}=require('./color');
+const path = require('path');
 const Userdata=[
     {
         name:"Sam",
@@ -27,3 +28,4 @@ resp.end()
 
 console.log(add(20,35))
 console.log(mult(5,6))
+
