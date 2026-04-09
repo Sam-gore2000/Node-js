@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>URL Shortner App</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="main">
+      <h2 class="heading">URL Shortner</h2>
+
+      <form id="shortner">
+    <div class="input">
+          <label for="">Enter URL</label> <br/>
+        <input type="text" placeholder="Enter URL Link" id="url"  name="url">
+    </div>
+    <div class="input">
+          <label for="">Custome Short URL</label><br/>
+        <input type="text" placeholder="Enter Short code" id="shortcode" name="shortcode">
+    </div>
+
+    <div>
+      <button>Submit</button>
+    </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const shortner=document.getElementById('shortner').addEventListener('submit',(e)=>{
+e.preventDefault();
+const formData= new FormData(event.target);
+const url=formData.get('url');
+const shortcode=formData.get('shortcode')
+console.log(url,shortcode);
+
+
+    })
+  </script>
+</body>
+</html>
