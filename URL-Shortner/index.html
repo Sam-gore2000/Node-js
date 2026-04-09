@@ -25,17 +25,21 @@
       <button>Submit</button>
     </div>
       </form>
+
+      <h2>Short URL</h2>
+      <p id="result"></p>
     </div>
   </div>
 
   <script>
+    
     const shortner=document.getElementById('shortner').addEventListener('submit',(e)=>{
 e.preventDefault();
 const formData= new FormData(event.target);
 const url=formData.get('url');
 const shortcode=formData.get('shortcode')
 console.log(url,shortcode);
-
+const result=document.getElementById('result').innerHTML=url;
 
     })
   </script>
