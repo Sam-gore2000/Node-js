@@ -8,13 +8,13 @@ const server = createServer(async (req, res) => {
 
       if (req.url === "/") {
         const data = await readFile("./index.html");
-        res.writeHead(200, { "Content-Type": "text/html" });
+        // res.writeHead(200, { "Content-Type": "text/html" });
         return res.end(data);
       }
 
       if (req.url === "/style.css") {
         const data = await readFile("./style.css");
-        res.writeHead(200, { "Content-Type": "text/css" });
+        // res.writeHead(200, { "Content-Type": "text/css" });
         return res.end(data);
       }
 
