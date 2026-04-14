@@ -31,17 +31,35 @@
     </div>
   </div>
 
-  <script>
-    
-    const shortner=document.getElementById('shortner').addEventListener('submit',(e)=>{
-e.preventDefault();
-const formData= new FormData(event.target);
-const url=formData.get('url');
-const shortcode=formData.get('shortcode')
-console.log(url,shortcode);
-const result=document.getElementById('result').innerHTML=url;
+ <script>
+  document.getElementById('shortner').addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-    })
-  </script>
+    const formData = new FormData(e.target);
+    const url = formData.get('url');
+    const shortcode = formData.get('shortcode');
+
+    try {
+      const res = await fetch('/shorten', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url, shortcode })
+      });
+
+      const data = await res.json();
+
+      if (data.shortUrl) {
+        document.getElementById('result').innerHTML =
+          `<a href="${data.shortUrl}" target="_blank">${data.shortUrl}</a>`;
+      } else {
+        document.getElementById('result').innerText = data.message;
+      }
+
+    } catch (err) {
+      console.error(err);
+      document.getElementById('result').innerText = "Error creating short URL";
+    }
+  });
+</script>
 </body>
 </html>
