@@ -116,18 +116,30 @@
     <button id="copyBtn" class="copy-btn" style="display:none;">Copy</button>
   </div>
 
-  <script>
-    const form = document.getElementById('shortner');
-    const resultDiv = document.getElementById('result');
-    const copyBtn = document.getElementById('copyBtn');
+ <script>
+  const form = document.getElementById('shortner');
+  const resultDiv = document.getElementById('result');
+  const copyBtn = document.getElementById('copyBtn');
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-      const formData = new FormData(form);
-      const url = formData.get('url');
-      const shortcode = formData.get('shortcode');
+    const formData = new FormData(form);
+    const url = formData.get('url');
+    const shortcode = formData.get('shortcode');
 
+    // 🔴 Reset UI
+    resultDiv.style.display = 'block';
+    resultDiv.innerText = "⏳ Processing...";
+    copyBtn.style.display = 'none';
+
+    // ✅ Basic URL validation
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      resultDiv.innerText = "❌ Please enter a valid URL (include http:// or https://)";
+      return;
+    }
+
+    try {
       const res = await fetch('/shorten', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -136,22 +148,32 @@
 
       const data = await res.json();
 
-      if (data.shortUrl) {
-        resultDiv.style.display = 'block';
-        copyBtn.style.display = 'block';
-        resultDiv.innerHTML = `<a href="${data.shortUrl}" target="_blank">${data.shortUrl}</a>`;
-      } else {
-        resultDiv.innerText = data.message;
-      }
-    });
+      console.log("Response:", data);
 
-    copyBtn.addEventListener('click', () => {
-      const text = resultDiv.innerText;
-      navigator.clipboard.writeText(text);
-      copyBtn.innerText = 'Copied!';
-      setTimeout(() => copyBtn.innerText = 'Copy', 2000);
-    });
-  </script>
+      if (res.ok && data.shortUrl) {
+        resultDiv.innerHTML = `
+          ✅ Short URL:<br>
+          <a href="${data.shortUrl}" target="_blank">${data.shortUrl}</a>
+        `;
+        copyBtn.style.display = 'block';
+      } else {
+        resultDiv.innerText = `❌ ${data.message || "Something went wrong"}`;
+      }
+
+    } catch (err) {
+      console.error(err);
+      resultDiv.innerText = "❌ Server error. Please try again.";
+    }
+  });
+
+  copyBtn.addEventListener('click', () => {
+    const text = resultDiv.innerText;
+    navigator.clipboard.writeText(text);
+
+    copyBtn.innerText = 'Copied!';
+    setTimeout(() => copyBtn.innerText = 'Copy', 2000);
+  });
+</script>
 
 </body>
 </html>
