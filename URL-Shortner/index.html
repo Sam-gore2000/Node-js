@@ -3,43 +3,131 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>URL Shortner App</title>
-  <link rel="stylesheet" href="style.css">
+  <title>URL Shortener</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #333;
+    }
+
+    .card {
+      background: #fff;
+      padding: 30px;
+      border-radius: 15px;
+      width: 350px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    .input-group {
+      margin-bottom: 15px;
+      text-align: left;
+    }
+
+    .input-group label {
+      font-size: 14px;
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      outline: none;
+      transition: 0.3s;
+    }
+
+    .input-group input:focus {
+      border-color: #667eea;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: #667eea;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #5a67d8;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 10px;
+      background: #f4f4f4;
+      border-radius: 8px;
+      word-break: break-all;
+    }
+
+    .result a {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .copy-btn {
+      margin-top: 10px;
+      background: #48bb78;
+    }
+
+    .copy-btn:hover {
+      background: #38a169;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <div class="main">
-      <h2 class="heading">URL Shortner</h2>
 
-      <form id="shortner">
-    <div class="input">
-          <label for="">Enter URL</label> <br/>
-        <input type="text" placeholder="Enter URL Link" id="url"  name="url">
-    </div>
-    <div class="input">
-          <label for="">Custome Short URL</label><br/>
-        <input type="text" placeholder="Enter Short code" id="shortcode" name="shortcode">
-    </div>
+  <div class="card">
+    <h2>🔗 URL Shortener</h2>
 
-    <div>
-      <button>Submit</button>
-    </div>
-      </form>
+    <form id="shortner">
+      <div class="input-group">
+        <label>Enter URL</label>
+        <input type="text" name="url" placeholder="https://example.com" required>
+      </div>
 
-      <h2>Short URL</h2>
-      <p id="result"></p>
-    </div>
+      <div class="input-group">
+        <label>Custom Short Code (optional)</label>
+        <input type="text" name="shortcode" placeholder="my-link">
+      </div>
+
+      <button type="submit">Shorten URL</button>
+    </form>
+
+    <div id="result" class="result" style="display:none;"></div>
+    <button id="copyBtn" class="copy-btn" style="display:none;">Copy</button>
   </div>
 
- <script>
-  document.getElementById('shortner').addEventListener('submit', async (e) => {
-    e.preventDefault();
+  <script>
+    const form = document.getElementById('shortner');
+    const resultDiv = document.getElementById('result');
+    const copyBtn = document.getElementById('copyBtn');
 
-    const formData = new FormData(e.target);
-    const url = formData.get('url');
-    const shortcode = formData.get('shortcode');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
 
-    try {
+      const formData = new FormData(form);
+      const url = formData.get('url');
+      const shortcode = formData.get('shortcode');
+
       const res = await fetch('/shorten', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -49,17 +137,21 @@
       const data = await res.json();
 
       if (data.shortUrl) {
-        document.getElementById('result').innerHTML =
-          `<a href="${data.shortUrl}" target="_blank">${data.shortUrl}</a>`;
+        resultDiv.style.display = 'block';
+        copyBtn.style.display = 'block';
+        resultDiv.innerHTML = `<a href="${data.shortUrl}" target="_blank">${data.shortUrl}</a>`;
       } else {
-        document.getElementById('result').innerText = data.message;
+        resultDiv.innerText = data.message;
       }
+    });
 
-    } catch (err) {
-      console.error(err);
-      document.getElementById('result').innerText = "Error creating short URL";
-    }
-  });
-</script>
+    copyBtn.addEventListener('click', () => {
+      const text = resultDiv.innerText;
+      navigator.clipboard.writeText(text);
+      copyBtn.innerText = 'Copied!';
+      setTimeout(() => copyBtn.innerText = 'Copy', 2000);
+    });
+  </script>
+
 </body>
 </html>
