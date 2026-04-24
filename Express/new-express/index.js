@@ -1,9 +1,6 @@
 import express from "express";
-import router from "./auth-router.js";
 
 const app = express();
-
-app.use('/auth/profile',router)
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
@@ -12,8 +9,6 @@ app.get("/profile", (req, res) => {
   res.send("This is sam Gore");
 });
 
-app.set("view engine", "ejs")
-
 app.listen(3003, () => {
-  console.log("Server is running on port 3003");
+  console.log("Server is running on port 3000");
 });

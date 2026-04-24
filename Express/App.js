@@ -1,11 +1,37 @@
-import express from 'express';
+import express from 'express'
+import path from 'path'
+import { fileURLToPath } from 'url'
+
+const app = express()
+
+// access the folder 
+const staticFolder = path.join(import.meta.dirname, 'public')
+app.use(express.static(staticFolder))
+
+// recreate __dirname in ES modules
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+const homepage = path.join(__dirname, 'index.html') 
+const aboutpage = path.join(__dirname, 'about.html')
+const contactpage = path.join(import.meta.dirname, 'form.html')
 
 
-const App=express();
+app.get('/contact', (req, res) => {
 
-App.get('/',(req,res)=>res.send("<h1>Hello Word !</h1>"));
-App.get('/about',(req,res)=>res.send("<h1>Hello About page !</h1>"));
+  // res.sendFile(aboutpage)
+  res.sendFile(contactpage)
+  console.log(req.query)
 
-const PORT=process.env.PORT || 3000;
-App.listen(PORT,()=>console.log(`Server run on port http://localhost:${PORT}`)
-)
+
+})
+
+app.get('/about', (req, res) => {
+  res.sendFile(aboutpage)
+})
+
+const PORT = process.env.PORT || 3000
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`)
+})
