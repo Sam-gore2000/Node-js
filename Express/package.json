@@ -8,10 +8,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-   "dev": "node --env-file=.env --watch App.js"
+    "dev": "node --env-file=.env --watch App.js"
   },
   "dependencies": {
-    
+    "ejs": "^5.0.2",
     "express": "^5.2.1"
   }
 }
+
