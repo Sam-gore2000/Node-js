@@ -10,7 +10,7 @@ const error=path.join(import.meta.dirname, 'error.html')
 app.use(express.urlencoded())
 
 // handle POST request
-app.get('/contact', (req, res) => {
+app.post('/contact', (req, res) => {
 
    res.sendFile(contact)
 
